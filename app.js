@@ -18,7 +18,8 @@ const	campgroundRoutes	= require('./routes/campgrounds'),
 		indexRoutes			= require('./routes/index');  		
 
 //CONFIGURE APPLICATION 
-mongoose.connect("mongodb://localhost/yelpcamp_v18", {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify:false }); 
+//mongoose.connect("mongodb://localhost/yelpcamp_v18", {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify:false }); 
+mongoose.connect("mongodb+srv://markgalante:Mg.0215513385@cluster0-7i1xn.mongodb.net/yelp_camp?retryWrites=true&w=majority", {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify:false }); 
 app.use(bodyParser.urlencoded({extended:true}));	
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public")); 	
