@@ -16,10 +16,11 @@ const	campgroundRoutes	= require('./routes/campgrounds'),
 		commentRoutes		= require('./routes/comments'),
 		reviewRoutes		= require('./routes/review'), 
 		indexRoutes			= require('./routes/index');  		
-
+// console.log(process.env.DATABASE_URL); 
 //CONFIGURE APPLICATION 
-//mongoose.connect("mongodb://localhost/yelpcamp_v18", {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify:false }); 
-mongoose.connect("mongodb+srv://markgalante:Mg.0215513385@cluster0-7i1xn.mongodb.net/yelp_camp?retryWrites=true&w=majority", {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify:false }); 
+mongoose.connect("mongodb://localhost/yelpcamp_v18", {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify:false }); //LOCAL DATABASE
+mongoose.connect(process.env.DATABASE_URL, {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify:false }); //LOCAL DATABASE
+// mongoose.connect("mongodb+srv://markgalante:Mg.0215513385@cluster0-7i1xn.mongodb.net/yelp_camp?retryWrites=true&w=majority", {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true, useFindAndModify:false }); 
 app.use(bodyParser.urlencoded({extended:true}));	
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public")); 	
@@ -66,3 +67,12 @@ app.use("/campgrounds/:slug/reviews", reviewRoutes);
 app.listen(process.env.PORT || 3000, ()=>{
 	console.log("Yelp Camp Server Has Started"); 
 });
+
+/* 
+process.env 
+the environment where this code is being run. 
+
+A way of added non-hardcoded variables. 
+
+Allows to have variables that responds to the environment.
+*/
