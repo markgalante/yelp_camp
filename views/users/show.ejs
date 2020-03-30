@@ -1,0 +1,26 @@
+<%- include ("../partials/header")%>
+
+
+<div class="row my-3">
+    <div class="col-md-4">
+        <div class="card">
+            <h2 class="card-title text-center"><%= user.firstName %> <%= user.lastName %> </h2>
+            <img class="img-thumbnail"  src="<%= user.avatar %>" alt="Image of <%= user.firstName %> <%= user.lastName %>">
+            <div class="card-body">
+              <a href="mailto:<%= user.email %>"><%= user.email %></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h3>Contributions by <%= user.firstName + " " + user.lastName %> </h3>
+        <ul class="list-group">
+            <% campgrounds.forEach((campground)=>{ %> 
+                <li class="list-group-item"><a href="/campgrounds/<%= campground.slug %>"><%= campground.name %></a></li>
+            <% }); %>
+        </ul>
+
+    </div>
+</div>
+
+
+<%- include ("../partials/footer") %>

@@ -1,0 +1,24 @@
+.card {
+    padding: 0;
+}
+
+#delete-form{
+    display: inline;
+}
+
+.forms{
+    width: 45%;
+    margin: 25px auto;
+}
+
+h1{
+    text-align: center;
+}
+
+.border-right-review{
+    border-right: 1px solid rgb(150, 150, 150);
+}
+
+.review-block:hover{
+    background-color: rgb(200, 200, 200);
+}

@@ -1,0 +1,67 @@
+<%- include ("../partials/header")%>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Review Page for <%= campground.name %></h1>
+            <a href="/campgrounds/<%= campground.slug %>">Go back to campground</a>
+            <div class="card">
+                <div class="caption-full">
+                    <div class="container p-3">
+                        <% if(campground.rating === 0){ %> 
+                            <h5><em>No reviews yet...</em></h5>
+                        <% } else { %>
+                            <p>
+                                <i class="fa fa-star checked" aria-hidden="true" checked></i>
+                                <i class="<% if(campground.rating > 1.5){ %> fa fa-star <% } else { %> fa fa-star-o <% } %>" aria-hidden="true"></i>
+                                <i class="<% if(campground.rating > 2.5){ %> fa fa-star <% } else { %> fa fa-star-o <% } %>" aria-hidden="true"></i>
+                                <i class="<% if(campground.rating > 3.5){ %> fa fa-star <% } else { %> fa fa-star-o <% } %>" aria-hidden="true"></i>
+                                <i class="<% if(campground.rating > 4.5){ %> fa fa-star <% } else { %> fa fa-star-o <% } %>" aria-hidden="true"></i>
+    
+                            <em>(Total reviews: <%= campground.reviews.length %>)</em>
+                            </p>
+                            <p>Current campground rating: <strong><%= campground.rating %></strong> </p>
+                            <h4 class="pt-2">All reviews for this campground: </h4>
+                            <hr style="margin-top: 0;">
+                            <% campground.reviews.forEach((review)=>{ %>
+                                <div class="row py-4 review-block">
+                                    <div class="col-md-3 border-right-review">
+                                        <%-'<i class="fa fa-star checked" aria-hidden="true"></i>'.repeat(review.rating) %><%-'<i class="fa fa-star-o" aria-hidden="true"></i>'.repeat(5-review.rating) %>
+                                        <div>
+                                            Review by: <a href="/users/<%= review.author.id %>"><strong><%= review.author.username %></strong></a>
+                                        </div>
+                                        <span style="font-size: 0.75em;"><em><%= review.updatedAt.toDateString() %></em></span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <p style="text-align: justify; word-wrap: break-word;">
+                                            <%= review.text %>
+                                        </p>
+                                        <% if(currentUser && review.author.id.equals(currentUser._id)){ %>
+                                            <a 
+                                            class="btn btn-sm btn-warning"
+                                            href="/campgrounds/<%= campground.slug %>/reviews/<%= review._id%>/edit">
+                                            Edit
+                                            </a>
+                                            <form id="delete-form" action="/campgrounds/<%= campground.slug %>/reviews/<%= review._id%>?_method=DELETE" method="POST">
+                                                <!-- <input type="button" class="btn btn-sm btn-danger" value="Delete"> -->
+                                                <button class="btn btn-sm btn-danger">Delete</button>
+                                            </form>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <hr>
+                            <% }) %>
+                        <% } %>
+                    </div>
+                    
+                    <div>
+                        <a class="btn btn-default <% if (currentUser && campground.reviews.some((review) => {return review.author.id.equals(currentUser._id)})) { %> disabled <% } %>" href="/campgrounds/<%= campground.slug %>/reviews/new">
+                            Write a New Review</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include ("../partials/footer") %>
