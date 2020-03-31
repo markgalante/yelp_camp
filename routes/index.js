@@ -69,7 +69,7 @@ router.get("/register", function(req, res){
 //  });
 
   //handle sign up logic WITH IMAGE UPLOAD: 
-  router.post("/register", upload.single("avatar"), (req, res)=>{
+  router.post("/register", upload.single("image"), (req, res)=>{
 	cloudinary.v2.uploader.upload(req.file.path, (err, result)=>{
 		if(err){
 			req.flash("error", "failed to upload an image"); 
