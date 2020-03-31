@@ -4,8 +4,8 @@ const   mongoose                = require("mongoose"),
 const UserSchema = new mongoose.Schema({
     username: String, 
     password: String, 
-    avatar: String, 
-    avatarId: String, //Delete if not working 
+    image: String, 
+    imageId: String, //Delete if not working 
     firstName: String, 
     lastName: String, 
     email: {type: String, unique: true, required: true}, //required to change password
