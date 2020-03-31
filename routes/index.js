@@ -83,7 +83,8 @@ router.get("/register", function(req, res){
 		username: 	req.body.username, 
 		firstName:	req.body.firstName,
 		lastName: 	req.body.lastName, 
-		// avatar: 	req.body.avatar, 
+		image: 		req.body.image, 
+		imageId:	req.body.imageId,
 		email: 		req.body.email 
 	}); //refers to User mongoose model 
 	if(req.body.adminCode === 'secretcode123'){
