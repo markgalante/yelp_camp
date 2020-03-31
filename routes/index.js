@@ -77,7 +77,7 @@ router.get("/register", function(req, res){
 			res.redirect("back");  
 		}
 		req.body.avatar = result.secure_url; 
-		req.body.avatar_id = result.public_id; 
+		req.body.avatarId = result.public_id; 
 	});
 	const	newUser	= new User({
 		username: 	req.body.username, 
