@@ -36,7 +36,7 @@
 						  <li class="<%= typeof page !== 'undefined' && page === 'register' ? 'nav-item active' : '' %>"><a class="nav-link" href="/register">Sign Up</a></li>
 					  <% } else { %>
 						<!---->
-						  <li class="nav-item"><a class="nav-link" href="#">Signed In As <%= currentUser.firstName + " " + currentUser.lastName %></a></li>
+						  <li class="nav-item"><a class="nav-link" href="/users/<%= currentUser._id%>">Signed In As <%= currentUser.firstName + " " + currentUser.lastName %></a></li>
 						  <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
 					  <% } %>
 				  </ul>
