@@ -44,30 +44,6 @@ router.get("/register", function(req, res){
 	res.render("register", {page: 'register'}); 
  });
 
-//  //handle sign up logic: 
-//  router.post("/register", (req, res)=>{
-// 	const	newUser	= new User({
-// 		username: 	req.body.username, 
-// 		firstName:	req.body.firstName,
-// 		lastName: 	req.body.lastName, 
-// 		avatar: 	req.body.avatar, 
-// 		email: 		req.body.email 
-// 	}); //refers to User mongoose model 
-// 	if(req.body.adminCode === 'secretcode123'){
-// 		newUser.isAdmin = true; 
-// 	}
-// 	User.register(newUser, req.body.password, (err, user)=>{ //provided by passport-local
-// 		if(err){
-// 			console.log(err); 
-// 			return res.render("register", {error: err.message}); 
-// 		}
-// 		passport.authenticate("local")(req, res, () => {
-// 			req.flash("success", "Successfully registered! Welcome to YelpCamp " + user.username + "!"); 
-// 			res.redirect("/campgrounds"); 	
-// 		});
-// 	}); 
-//  });
-
   //handle sign up logic WITH IMAGE UPLOAD: 
   router.post("/register", upload.single("image"), (req, res)=>{
 	cloudinary.v2.uploader.upload(req.file.path, (err, result)=>{
@@ -78,28 +54,32 @@ router.get("/register", function(req, res){
 		}
 		req.body.image = result.secure_url; 
 		req.body.imageId = result.public_id; 
-	});
-	const	newUser	= new User({
-		username: 	req.body.username, 
-		firstName:	req.body.firstName,
-		lastName: 	req.body.lastName, 
-		image: 		req.body.image, 
-		imageId:	req.body.imageId,
-		email: 		req.body.email 
-	}); //refers to User mongoose model 
-	if(req.body.adminCode === 'secretcode123'){
-		newUser.isAdmin = true; 
-	}
-	User.register(newUser, req.body.password, (err, user)=>{ //provided by passport-local
-		if(err){
-			console.log(err); 
-			return res.render("register", {error: err.message}); 
+
+		const	newUser	= new User({
+			username: 	req.body.username, 
+			firstName:	req.body.firstName,
+			lastName: 	req.body.lastName, 
+			image: 		req.body.image, 
+			email: 		req.body.email 
+		}); //refers to User mongoose model
+
+		if(req.body.adminCode === 'secretcode123'){
+			newUser.isAdmin = true; 
 		}
-		passport.authenticate("local")(req, res, () => {
-			req.flash("success", "Successfully registered! Welcome to YelpCamp " + user.username + "!"); 
-			res.redirect("/campgrounds"); 	
-		});
-	}); 
+
+		User.register(newUser, req.body.password, (err, user)=>{ //provided by passport-local
+			if(err){
+				console.log(err); 
+				return res.render("register", {error: err.message}); 
+			}
+			passport.authenticate("local")(req, res, () => {
+				req.flash("success", "Successfully registered! Welcome to YelpCamp " + user.username + "!"); 
+				res.redirect("/campgrounds"); 	
+			});
+			console.log(req.body.image); 
+			console.log(req.body.firstName); 
+		}); 
+	});
  });
 
  //get request for login form:
