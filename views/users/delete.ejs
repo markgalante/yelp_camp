@@ -1,0 +1,18 @@
+<%- include ("../partials/header") %>
+
+<h1 class="mt-5">Hey, <%= user.firstName %>. Are you sure you want to delete your profile?</h1>
+<div class="row">
+    <div class="forms">
+        <form  method="POST" action="/users/<%= user.id %>?_method=DELETE">
+            <div class="form-group">
+                <input class="form-control" type="text"     name="password"     placeholder="example">
+            </div>
+            <div class="form-group">
+                <input class="btn btn-lg btn-primary btn-block" type="submit"   value="Edit">
+            </div> 
+        </form>
+    </div>
+</div>
+
+
+<%- include ("../partials/footer") %>

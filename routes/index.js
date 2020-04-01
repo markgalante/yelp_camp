@@ -3,6 +3,8 @@ const       express     = require('express'),
             passport    = require('passport'), 
 			User        = require('../models/user'), 
 			Campground 	= require('../models/campground'),
+			Review		= require("../models/review"), 
+			Comment		= require("../models/comment"), 
 			async 		= require('async'), //Needed to change password
 			nodemailer	= require('nodemailer'), //Needed to change password
 			crypto		= require('crypto'),  //Needed to change password, crypto is a part of node. 
@@ -117,7 +119,7 @@ router.get("/users/:id", (req, res)=>{
 });
 
 	//EDIT ROUTE
-router.get("/users/:id/edit",middleware.isLoggedIn , (req, res)=>{
+router.get("/users/:id/edit", middleware.isLoggedIn, (req, res)=>{
 	User.findById(req.params.id, (err, foundUser)=>{
 		if(err){
 			req.flash("error", "Error getting user"); 
@@ -165,6 +167,63 @@ router.put("/users/:id", middleware.isLoggedIn, upload.single("image"), (req, re
 		}
 	});
 });
+
+	//DELETE PAGE: 
+router.get("/users/:id/delete", middleware.isLoggedIn, (req, res)=>{
+	User.findById(req.params.id, (err, user)=>{
+		if(err){
+			console.log(err.message);
+			req.flash(err.message); 
+			return res.redirect("back"); 
+		} 
+		res.render("users/delete", {user:user}); 
+	}); 
+}); 
+
+	//DELETE PROFILE ROUTE: 
+// router.delete("/users/:id", middleware.isLoggedIn, (req, res)=>{
+// 	User.findByIdAndRemove(req.params.id, (err, user)=>{
+// 		if(err){
+// 			console.log(err); 
+// 			req.flash("err", "UNABLE TO DELETE PROFILE " + err.message)
+// 		}
+// 		//delete campgrounds
+// 		Campground.findOneAndDelete({author: req.params.id}, (err)=>{
+// 			if(err){
+// 				console.log(err); 
+// 			}
+// 		});
+
+// 		//delete comments
+// 		Comment.findOneAndDelete({author: user.id}, (err)=>{
+// 			if(err){
+// 				console.log(err); 
+// 			}
+// 		});
+
+// 		//delete reviews
+// 		Review.findOneAndDelete({author: user.id}, (err)=>{
+// 			if(err){
+// 				console.log(err)
+// 			}
+// 		}); 
+
+// 		//delete profile picture from cloudinary
+// 		try{
+// 			await cloudinary.v2.uploader.destroy(user.imageId);
+// 			campground.remove(); 
+// 			req.flash("success", "Successfully Deleted Campground"); 
+// 			res.redirect("/");  
+// 		} catch(err){
+// 			if(err){
+// 				req.flash("error", err.message);
+// 				return res.redirect("back");  
+// 			}
+// 		}
+// 	}); 
+
+	
+// }); 
 				//CHANGE PASSWORD 
 //get request to form to submit the email address
 router.get("/forgot", (req, res)=>{
