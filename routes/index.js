@@ -95,6 +95,8 @@ router.post("/register", upload.single("image"), (req, res)=>{
 router.post("/login", passport.authenticate("local", { //uses middleware from passport.authenticate
 	successRedirect: "/campgrounds",
 	failureRedirect: "/login",
+	failureFlash: true, 
+	successFlash: "Welcome back!"
 	}), (req, res)=>{ 	
 
 });
@@ -169,7 +171,7 @@ router.put("/users/:id", middleware.isLoggedIn, upload.single("image"), (req, re
 });
 
 	//DELETE PAGE: 
-router.get("/users/:id/delete", middleware.isLoggedIn, (req, res)=>{
+router.get("/users/:id/delete", middleware.isLoggedIn, (req, res) => {
 	User.findById(req.params.id, (err, user)=>{
 		if(err){
 			console.log(err.message);
@@ -181,49 +183,47 @@ router.get("/users/:id/delete", middleware.isLoggedIn, (req, res)=>{
 }); 
 
 	//DELETE PROFILE ROUTE: 
-// router.delete("/users/:id", middleware.isLoggedIn, (req, res)=>{
-// 	User.findByIdAndRemove(req.params.id, (err, user)=>{
-// 		if(err){
-// 			console.log(err); 
-// 			req.flash("err", "UNABLE TO DELETE PROFILE " + err.message)
-// 		}
-// 		//delete campgrounds
-// 		Campground.findOneAndDelete({author: req.params.id}, (err)=>{
-// 			if(err){
-// 				console.log(err); 
-// 			}
-// 		});
+router.delete("/users/:id", middleware.isLoggedIn, (req, res)=>{
+	User.findById(req.params.id, (err, user)=>{
+		if(err){
+			console.log(err); 
+			req.flash("err", "UNABLE TO DELETE PROFILE " + err.message)
+		}
+		
+		// delete campgrounds
+		Campground.findOneAndRemove({"author.id": user.id}, (err, campground)=>{
+			if(err){
+				console.log(err); 
+			} 
+		});
 
-// 		//delete comments
-// 		Comment.findOneAndDelete({author: user.id}, (err)=>{
-// 			if(err){
-// 				console.log(err); 
-// 			}
-// 		});
+		//delete comments
+		Comment.findOneAndRemove({"author.id": user.id}, (err, comment)=>{
+			if(err){
+				console.log(err); 
+			} 
+		});
 
-// 		//delete reviews
-// 		Review.findOneAndDelete({author: user.id}, (err)=>{
-// 			if(err){
-// 				console.log(err)
-// 			}
-// 		}); 
+		//delete reviews
+		Review.deleteMany({"author.id": user.id}, (err, review)=>{
+			if(err){
+				console.log(err)
+			}
+		}); 
 
-// 		//delete profile picture from cloudinary
-// 		try{
-// 			await cloudinary.v2.uploader.destroy(user.imageId);
-// 			campground.remove(); 
-// 			req.flash("success", "Successfully Deleted Campground"); 
-// 			res.redirect("/");  
-// 		} catch(err){
-// 			if(err){
-// 				req.flash("error", err.message);
-// 				return res.redirect("back");  
-// 			}
-// 		}
-// 	}); 
-
-	
-// }); 
+		//delete profile picture from cloudinary
+		try{
+			cloudinary.v2.uploader.destroy(user.imageId);
+			user.remove();
+			res.redirect("/campgrounds");  
+		} catch(err){
+			if(err){
+				req.flash("error", err.message);
+				return res.redirect("back");  
+			}
+		}
+	}); 
+}); 
 				//CHANGE PASSWORD 
 //get request to form to submit the email address
 router.get("/forgot", (req, res)=>{
