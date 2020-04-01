@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema({
     imageId: String, //Delete if not working 
     firstName: String, 
     lastName: String, 
-    email: {type: String, unique: true, required: true}, //required to change password
+    email: {type: String, unique: true}, //required to change password
     resetPasswordToken: String, //required to change password
     resetPasswordExpires: Date, //required to change password
     isAdmin: {type: Boolean, default: false} //Creating admin roles 
