@@ -7,7 +7,8 @@ const       express     = require('express'),
 			nodemailer	= require('nodemailer'), //Needed to change password
 			crypto		= require('crypto'),  //Needed to change password, crypto is a part of node. 
 			multer		= require('multer'),
-			cloudinary	= require("cloudinary"); 
+			cloudinary	= require("cloudinary"), 
+			middleware	= require("../middleware"); 
 
 //configure multer
 const storage = multer.diskStorage({
@@ -45,7 +46,7 @@ router.get("/register", function(req, res){
  });
 
   //handle sign up logic WITH IMAGE UPLOAD: 
-  router.post("/register", upload.single("image"), (req, res)=>{
+router.post("/register", upload.single("image"), (req, res)=>{
 	cloudinary.v2.uploader.upload(req.file.path, (err, result)=>{
 		if(err){
 			req.flash("error", "failed to upload an image"); 
@@ -80,7 +81,7 @@ router.get("/register", function(req, res){
 			console.log(req.body.firstName); 
 		}); 
 	});
- });
+});
 
  //get request for login form:
  router.get("/login", (req, res)=>{
@@ -115,6 +116,55 @@ router.get("/users/:id", (req, res)=>{
 	});
 });
 
+	//EDIT ROUTE
+router.get("/users/:id/edit",middleware.isLoggedIn , (req, res)=>{
+	User.findById(req.params.id, (err, foundUser)=>{
+		if(err){
+			req.flash("error", "Error getting user"); 
+			console.log(err.message); 
+			res.redirect("back"); 
+		} else{
+			res.render("users/edit", {user : foundUser}); 
+		}
+	}); 
+});
+
+	//UPDATE ROUTE: 
+router.put("/users/:id", middleware.isLoggedIn, upload.single("image"), (req, res)=>{
+	User.findById(req.params.id, async (err, updateUser)=>{
+		if(err){
+			console.log(err); 
+			req.flash("error", "Unable to find user" + err.message); 
+			return res.redirect("back"); 
+		} else{
+			updateUser.firstName = req.body.user.firstName; 
+			updateUser.lastName = req.body.user.lastName;
+			updateUser.email = req.body.user.email; 
+			updateUser.username = req.body.user.username; 
+			if(req.body.adminCode === "secretcode123"){
+				updateUser.isAdmin = true; 
+			}
+			if(req.file){
+				try{
+					cloudinary.v2.uploader.destroy(updateUser.imageId);  
+					let result = await cloudinary.v2.uploader.upload(req.file.path); //uplodaind a new file
+					updateUser.imageId 	= result.public_id;
+					updateUser.image	= result.secure_url; 
+					
+				} catch(err){
+					req.flash("error", "Error with updating profile picture " + err.message); 
+					console.log(err.message); 
+					res.redirect("back"); 
+				}
+			}
+
+			updateUser.save(); 
+			req.flash("success", "Upated profile!"); 
+			console.log(updateUser); 
+			res.redirect("/users/"+updateUser.id); 
+		}
+	});
+});
 				//CHANGE PASSWORD 
 //get request to form to submit the email address
 router.get("/forgot", (req, res)=>{
