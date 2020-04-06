@@ -10,7 +10,8 @@ const       express     = require('express'),
 			crypto		= require('crypto'),  //Needed to change password, crypto is a part of node. 
 			multer		= require('multer'),
 			cloudinary	= require("cloudinary"), 
-			middleware	= require("../middleware"); 
+			middleware	= require("../middleware"), 
+			mongoose 	= require('mongoose');
 
 //configure multer
 const storage = multer.diskStorage({
@@ -182,6 +183,17 @@ router.get("/users/:id/delete", middleware.isLoggedIn, (req, res) => {
 	}); 
 }); 
 
+calculateAverage = (reviews) => {
+	if(reviews.length === 0) {
+		return 0; 
+	} 
+	var sum = 0; 
+	reviews.forEach((element)=>{
+		sum+= element.rating; 
+	}); 
+	return sum / reviews.length; 
+}
+
 	//DELETE PROFILE ROUTE: 
 router.delete("/users/:id", middleware.isLoggedIn, (req, res)=>{
 	User.findById(req.params.id, (err, user)=>{
@@ -191,25 +203,69 @@ router.delete("/users/:id", middleware.isLoggedIn, (req, res)=>{
 		}
 		
 		// delete campgrounds
-		Campground.findOneAndRemove({"author.id": user.id}, (err, campground)=>{
+		Campground.deleteMany({"author.id": user.id}, (err)=>{
 			if(err){
 				console.log(err); 
+			} else{
+				console.log("Deleted campground by " + user.firstName); 
 			} 
 		});
+
+		// Campground.find({"reviews.author" : { $in:[mongoose.Types.ObjectId(user.id)]} }, (err, allCampgrounds)=>{
+		// 	if(err){
+		// 		console.log(err); 
+		// 	}else{
+		// 		allCampgrounds.ma
+		// 		// allCampgrounds.rating = calculateAverage(allCampgrounds.reviews); 
+		// 		// allCampgrounds.save(); 
+		// 		console.log(allCampgrounds); 
+		// 	}
+		// });
 
 		//delete comments
-		Comment.findOneAndRemove({"author.id": user.id}, (err, comment)=>{
+		// Comment.deleteMany({"author.id": user.id}, (err)=>{
+		// 	if(err){
+		// 		console.log(err); 
+		// 	} 
+		// });
+
+
+		//Find reviews, use user ID to update campground. 
+		Review.find({"author.id": user.id}, (err, foundReviews)=>{
 			if(err){
-				console.log(err); 
-			} 
-		});
+				console.log(err.message); 
+			} else{
+				//console.log("reviews.campground: "+ foundReviews.campground);
+				foundReviews.forEach(reviewed => {
+					const campground_id = reviewed.campground; //get _id for campground
+					console.log("LOG OF ALL REVIEWS BY " + user.firstName + ": " +  reviewed); 
+					Campground.findByIdAndUpdate(campground_id, {$pull:{reviews: reviewed.id}}, {new:true}).populate("reviews").exec((err, campgrounds)=>{
+						campgrounds.rating = calculateAverage(campgrounds.reviews);
+						// console.log("CAMPGROUND NAMES: " + campgrounds.name + " REVIEWS: " + campgrounds.reviews); 
+						campgrounds.save(); 
+					}); //{$pull:{reviews: reviewed.id}},
+				}); 
+			}
+		})
 
 		//delete reviews
-		Review.deleteMany({"author.id": user.id}, (err, review)=>{
+		/* Review.deleteMany({"author.id": user.id}, (err, reviews)=>{
 			if(err){
 				console.log(err)
-			}
-		}); 
+			} else{
+				console.log("DELETED REVIEWS: " + reviews); //OUTPUT: { n: 2, ok: 1, deletedCount: 2 } 
+				 //, {$pull:{reviews: review_id}} 
+				Campground.findById(reviews.campground, (err, campgrounds)=>{
+					if(err){
+						console.log(err.message); 
+					} else{
+						console.log(campgrounds);
+					} 
+				}); 
+			} //{"reviews.author" : { $in:[mongoose.Types.ObjectId(user.id)]}}
+		}); */ 
+
+
 
 		//delete profile picture from cloudinary
 		try{
