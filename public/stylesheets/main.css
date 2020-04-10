@@ -23,7 +23,13 @@ h1{
     background-color: rgb(200, 200, 200);
 }
 
+/* /campground: IMAGES OF CAMPSITES  */
 .campgroundImagePics{
     height: 80%;
-    background-size: cover;
 }
+
+.card-img{
+  object-fit: cover;
+  height: 100%;  
+}
+/*END*/
