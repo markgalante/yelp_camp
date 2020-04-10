@@ -27,9 +27,11 @@
 			<% } %>
 		</div>
 		<% campgrounds.forEach(campground=>{ %>
-			<div class="col-md-3 col-sm-6 my-2">
+			<div class="col-lg-3 col-sm-6 my-2">
 				<div class="card h-100">
-					<img class="card-img" src="<%= campground.image %>">
+					<div class="campgroundImagePics">
+						<img class="card-img" src="<%= campground.image %>">
+					</div>
 					<h4 class="card-title"><%= campground.name %></h4>
 					<p>
 						<a href="/campgrounds/<%= campground.slug %>" class="btn btn-primary">More Information</a>

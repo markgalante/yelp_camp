@@ -22,3 +22,8 @@ h1{
 .review-block:hover{
     background-color: rgb(200, 200, 200);
 }
+
+.campgroundImagePics{
+    height: 80%;
+    background-size: cover;
+}
