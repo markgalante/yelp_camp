@@ -63,7 +63,8 @@ router.post("/register", upload.single("image"), (req, res)=>{
 			username: 	req.body.username, 
 			firstName:	req.body.firstName,
 			lastName: 	req.body.lastName, 
-			image: 		req.body.image, 
+			image: 		req.body.image,
+			imageId:	req.body.imageId, 
 			email: 		req.body.email 
 		}); //refers to User mongoose model
 
@@ -196,7 +197,7 @@ calculateAverage = (reviews) => {
 
 	//DELETE PROFILE ROUTE: 
 router.delete("/users/:id", middleware.isLoggedIn, (req, res)=>{
-	User.findById(req.params.id, (err, user)=>{
+	User.findByIdAndRemove(req.params.id, async (err, user)=>{
 		if(err){
 			console.log(err); 
 			req.flash("err", "UNABLE TO DELETE PROFILE " + err.message)
@@ -206,21 +207,8 @@ router.delete("/users/:id", middleware.isLoggedIn, (req, res)=>{
 		Campground.deleteMany({"author.id": user.id}, (err)=>{
 			if(err){
 				console.log(err); 
-			} else{
-				console.log("Deleted campground by " + user.firstName); 
 			} 
 		});
-
-		// Campground.find({"reviews.author" : { $in:[mongoose.Types.ObjectId(user.id)]} }, (err, allCampgrounds)=>{
-		// 	if(err){
-		// 		console.log(err); 
-		// 	}else{
-		// 		allCampgrounds.ma
-		// 		// allCampgrounds.rating = calculateAverage(allCampgrounds.reviews); 
-		// 		// allCampgrounds.save(); 
-		// 		console.log(allCampgrounds); 
-		// 	}
-		// });
 
 		//delete comments
 		// Comment.deleteMany({"author.id": user.id}, (err)=>{
@@ -235,42 +223,25 @@ router.delete("/users/:id", middleware.isLoggedIn, (req, res)=>{
 			if(err){
 				console.log(err.message); 
 			} else{
-				//console.log("reviews.campground: "+ foundReviews.campground);
 				foundReviews.forEach(reviewed => {
-					const campground_id = reviewed.campground; //get _id for campground
+					const campground_id = reviewed.campground;
 					console.log("LOG OF ALL REVIEWS BY " + user.firstName + ": " +  reviewed); 
 					Campground.findByIdAndUpdate(campground_id, {$pull:{reviews: reviewed.id}}, {new:true}).populate("reviews").exec((err, campgrounds)=>{
-						campgrounds.rating = calculateAverage(campgrounds.reviews);
-						// console.log("CAMPGROUND NAMES: " + campgrounds.name + " REVIEWS: " + campgrounds.reviews); 
+						campgrounds.rating = calculateAverage(campgrounds.reviews); 
 						campgrounds.save(); 
-					}); //{$pull:{reviews: reviewed.id}},
+					}); 
 				}); 
 			}
-		})
-
-		//delete reviews
-		/* Review.deleteMany({"author.id": user.id}, (err, reviews)=>{
-			if(err){
-				console.log(err)
-			} else{
-				console.log("DELETED REVIEWS: " + reviews); //OUTPUT: { n: 2, ok: 1, deletedCount: 2 } 
-				 //, {$pull:{reviews: review_id}} 
-				Campground.findById(reviews.campground, (err, campgrounds)=>{
-					if(err){
-						console.log(err.message); 
-					} else{
-						console.log(campgrounds);
-					} 
-				}); 
-			} //{"reviews.author" : { $in:[mongoose.Types.ObjectId(user.id)]}}
-		}); */ 
-
-
+		});
 
 		//delete profile picture from cloudinary
+		console.log("IMAGE ID: " + user.imageId);
 		try{
-			cloudinary.v2.uploader.destroy(user.imageId);
+			await cloudinary.v2.uploader.destroy(user.imageId, (err, result)=>{
+				console.log(err, result); 
+			});
 			user.remove();
+			console.log(user.imageId); 
 			res.redirect("/campgrounds");  
 		} catch(err){
 			if(err){
