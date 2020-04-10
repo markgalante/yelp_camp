@@ -1,22 +1,80 @@
 <%- include ("../partials/header")%>
 
     <div class="row my-3">
-        <div class="col-md-4">
+        <div class="col-md-5">
             <div class="card">
                 <h2 class="card-title text-center"><%= user.firstName %> <%= user.lastName %> </h2>
-                <img class="img-thumbnail"  src="<%= user.image %>" alt="Image of <%= user.firstName %> <%= user.lastName %>">
+                <img class="card-img profile-pic"  src="<%= user.image %>" alt="Image of <%= user.firstName %> <%= user.lastName %>">
                 <div class="card-body">
                   <a href="mailto:<%= user.email %>"><%= user.email %></a>
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
-            <h3>Contributions by <%= user.firstName + " " + user.lastName %> </h3>
-            <ul class="list-group">
-                <% campgrounds.forEach((campground)=>{ %> 
-                    <li class="list-group-item"><a href="/campgrounds/<%= campground.slug %>"><%= campground.name %></a></li>
-                <% }); %>
-            </ul>
+        <div class="col-md-7">
+            <h3 class="mt-sm-5 mt-lg-0">Campgrounds by <%= user.firstName + " " + user.lastName %> </h3>
+                <!-- CONTRIBUTED CAMPGROUNDS -->
+                <div class="card mb-3" style="max-width: 540px;">
+                    <% if(campgrounds.length === 0){ %> 
+                            <div class="col">
+                                <div class="card-body">
+                                <p class="card-text"><small class="text-muted">No additions...yet</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    <% } else{ %>
+                        <% campgrounds.forEach((campground)=>{ %>
+                            <div class="row no-gutters my-2 ml-2">
+                                <div class="col-md-4">
+                                    <img src="<%= campground.image %>" class="card-img" alt="Image of <%= campground.name %>">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                    <h5 class="card-title"><a href="/campgrounds/<%= campground.slug %>"><%= campground.name %></a></h5>
+                                    <p class="card-text"><small class="text-muted"><%= moment(campground.createdAt).fromNow()%></small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                </div>
+                <!-- CONTRIBUTED CAMPGROUNDS - END --> 
+
+                <h3 class="mt-sm-5 mt-lg-0">Reviews by <%= user.firstName + " " + user.lastName %> </h3>
+                <!-- CONTRIBUTED REVIEWS -->
+                <div class="card mb-3" style="max-width: 540px;">
+                    <% if(reviews.length === 0){ %> 
+                        <div class="col">
+                            <div class="card-body">
+                                <p class="card-text"><small class="text-muted">No additions...yet</small></p>
+                            </div>
+                        </div>
+                    <% } else{ %> 
+                        <% reviews.forEach((review)=>{ %>
+                            <div class="row no-gutters my-2 ml-2">
+                                <div class="col-md-4">
+                                    <img src="<%= review.campground.image %>" class="card-img" alt="Image of <%= review.campground.name %>">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><a href="/campgrounds/<%= review.campground.slug %>"> <%= review.campground.name %> </a></h5>
+                                        <p>
+											<i class="fa fa-star checked" aria-hidden="true" checked></i>
+											<i class="<% if(review.rating > 1.5){ %> fa fa-star <% } else { %> fa fa-star-o <% } %>" aria-hidden="true"></i>
+											<i class="<% if(review.rating > 2.5){ %> fa fa-star <% } else { %> fa fa-star-o <% } %>" aria-hidden="true"></i>
+											<i class="<% if(review.rating > 3.5){ %> fa fa-star <% } else { %> fa fa-star-o <% } %>" aria-hidden="true"></i>
+											<i class="<% if(review.rating > 4.5){ %> fa fa-star <% } else { %> fa fa-star-o <% } %>" aria-hidden="true"></i>
+                                        </p>
+                                        <p class="card-text"> <%= review.text %> </p>
+                                        <p class="card-text"><small class="text-muted"><%= moment(review.createdAt).fromNow()%></small></p>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } %> 
+                    
+                </div>
+                <!-- CONTRIBUTED REVIEWS - END  -->
         </div>
     </div>
     <div class="row">

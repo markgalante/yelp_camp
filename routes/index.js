@@ -116,7 +116,14 @@ router.get("/users/:id", (req, res)=>{
 					req.flash("error", "This user does not exist!"); 
 					res.redirect("back"); 
 				}
-				res.render("users/show", {user:foundUser, campgrounds: campgrounds});
+				Review.find().where('author.id').equals(foundUser.id).populate('campground').exec((err, reviews)=>{
+					if(err){
+						console.log(err); 
+						res.redirect("back"); 
+					}
+					console.log(reviews); 
+					res.render("users/show", {user:foundUser, campgrounds: campgrounds, reviews:reviews});
+				})
 			});
 		}
 	});
