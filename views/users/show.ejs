@@ -78,12 +78,19 @@
                 <!-- CONTRIBUTED REVIEWS - END  -->
             </div>    
         </div>
-    </div>
-    <div class="row">
-        <% if(currentUser){ %> 
-            <a href="/users/<%= user._id %>/edit">Edit</a>
-            <a href="/users/<%= user._id %>/delete">Delete Profile</a>
-        <% } %>
+        
+            <% if(currentUser){ %> 
+                <div class="dropdown">
+                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Actions
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/users/<%= user._id %>/edit">Edit</a>
+                        <a class="dropdown-item" href="/users/<%= user._id %>/delete">Delete Profile</a>
+                    </div>
+                </div>
+            <% } %>
+        
     </div>
 
 <%- include ("../partials/footer") %>   
