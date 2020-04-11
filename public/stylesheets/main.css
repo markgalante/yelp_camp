@@ -33,3 +33,9 @@ h1{
   height: 100%;  
 }
 /*END*/
+
+.profile-pic{
+    height: 200px;
+    width: 200px;
+    margin: auto;
+}
