@@ -13,11 +13,26 @@
 					</p>
 					<p class="card-text"><%= campground.description %></p>
 
-					<% if(currentUser && campground.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %>
-						<a class="btn btn-warning" href="/campgrounds/<%= campground.slug%>/edit">Edit</a>
+					<% if(currentUser && campground.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %> 
+						<div class="dropdown">
+							<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Actions
+							</button>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+								<a class="dropdown-item" href="/campgrounds/<%= campground.slug%>/edit">Edit</a>
+								<form class="delete-form" action="/campgrounds/<%= campground.slug %>?_method=DELETE" method="POST" >
+									<button class="dropdown-item">Delete Form </button>
+								</form>
+
+							</div>
+						</div>
+						
+						<!-- <a class="btn btn-warning" href="/campgrounds/<%= campground.slug%>/edit">Edit</a>
 						<form class="delete-form" action="/campgrounds/<%= campground.slug %>?_method=DELETE" method="POST" >
 							<button class="btn btn-danger">Delete Form </button>
-						</form>
+						</form> -->
+
 					<% } %>
 						
 				</div>
