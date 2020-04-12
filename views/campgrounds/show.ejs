@@ -27,12 +27,6 @@
 
 							</div>
 						</div>
-						
-						<!-- <a class="btn btn-warning" href="/campgrounds/<%= campground.slug%>/edit">Edit</a>
-						<form class="delete-form" action="/campgrounds/<%= campground.slug %>?_method=DELETE" method="POST" >
-							<button class="btn btn-danger">Delete Form </button>
-						</form> -->
-
 					<% } %>
 						
 				</div>
@@ -72,15 +66,21 @@
 														<%= review.text %>
 													</p>
 													<% if(currentUser && review.author.id.equals(currentUser._id)){ %>
-														<a 
-														class="btn btn-sm btn-warning"
-														href="/campgrounds/<%= campground.slug %>/reviews/<%= review._id%>/edit">
-														Edit
-														</a>
-														<form id="delete-form" action="/campgrounds/<%= campground.slug %>/reviews/<%= review._id%>?_method=DELETE" method="POST">
-															<!-- <input type="button" class="btn btn-sm btn-danger" value="Delete"> -->
-															<button class="btn btn-sm btn-danger">Delete</button>
-														</form>
+
+
+														<div class="dropdown float-right">
+															<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																Actions
+															</button>
+															<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+								
+																<a class="dropdown-item" href="/campgrounds/<%= campground.slug %>/reviews/<%= review._id%>/edit">Edit</a>
+																<form id="delete-form" action="/campgrounds/<%= campground.slug %>/reviews/<%= review._id%>?_method=DELETE" method="POST" >
+																	<button class="dropdown-item">Delete</button>
+																</form>
+								
+															</div>
+														</div>
 													<% } %>
 												</div>
 											</div>
@@ -90,7 +90,7 @@
 								</div>
 								
 								<div>
-									<a class="btn m-3 btn-primary <% if (currentUser && campground.reviews.some((review) => {return review.author.id.equals(currentUser._id)})) { %> disabled <% } %>" href="/campgrounds/<%= campground.slug %>/reviews/new">
+									<a class="btn m-3 btn-primary <% if (currentUser && campground.reviews.some((review) => {return review.author.id.equals(currentUser._id)})) { %> d-none <% } %>" href="/campgrounds/<%= campground.slug %>/reviews/new">
 										Write a New Review</a>
 								</div>
 							</div>
