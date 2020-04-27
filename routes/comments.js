@@ -1,6 +1,6 @@
 const       express     = require("express"),
-            router      = express.Router({mergeParams: true}); //merge params from campgrounds and comments.js  
-            Campground  = require('../models/campground'); 
+            router      = express.Router({mergeParams: true}), //merge params from campgrounds and comments.js  
+            Campground  = require('../models/campground'), 
 			Comment     = require('../models/comment'),
 			middleware	= require('../middleware'); 
 
