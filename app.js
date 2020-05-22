@@ -11,8 +11,10 @@ var express 	= require("express"),
 	User		= require("./models/user");
 	seedDB      = require("./seeds"); 
 
+require('dotenv').config({path: __dirname + '/.env'});
+
 // requiring route files
-const	campgroundRoutes	= require('./routes/campgrounds'),
+var		campgroundRoutes	= require('./routes/campgrounds'),
 		commentRoutes		= require('./routes/comments'),
 		reviewRoutes		= require('./routes/review'), 
 		indexRoutes			= require('./routes/index');  		

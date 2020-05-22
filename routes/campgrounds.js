@@ -24,12 +24,12 @@ const upload = multer({ storage: storage, fileFilter: imageFilter})
 
 //setting up cloudinary
 cloudinary.config({ 
-  cloud_name: 'dbpkz1rnm', 
-  api_key: 479674634572721 /*process.env.CLOUDINARY_API_KEY*/, 
-  api_secret: 'zyBsxCMOAqCEZ-BCVr3Rc2GjBZw' /*process.env.CLOUDINARY_API_SECRET*/ 
+	cloud_name: process.env.CLOUDNAME, 
+    api_key: process.env.API_KEY, /*process.env.CLOUDINARY_API_KEY*/
+    api_secret: process.env.API_SECRET /*process.env.CLOUDINARY_API_SECRET*/ 
 });
 //environment variables to hide cofidential information .env node modules
-escapeRegex = (text) => {
+escapeRegex = (text) => { //From: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 	return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
 }
 

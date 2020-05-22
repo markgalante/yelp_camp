@@ -1,4 +1,4 @@
-const       express     = require('express'),
+var       	express     = require('express'),
             router      = express.Router(); 
             passport    = require('passport'), 
 			User        = require('../models/user'), 
@@ -12,6 +12,8 @@ const       express     = require('express'),
 			cloudinary	= require("cloudinary"), 
 			middleware	= require("../middleware"), 
 			mongoose 	= require('mongoose');
+
+require('dotenv').config({path: __dirname + '/.env'});			
 
 //configure multer
 const storage = multer.diskStorage({
@@ -32,9 +34,9 @@ const upload = multer({ storage: storage, fileFilter: imageFilter});
 
 //set up cloudinary: 
 cloudinary.config({
-	cloud_name: 'dbpkz1rnm', 
-	api_key: 479674634572721, 
-	api_secret: 'zyBsxCMOAqCEZ-BCVr3Rc2GjBZw'
+	cloud_name: process.env.CLOUDNAME, 
+    api_key: process.env.API_KEY, /*process.env.CLOUDINARY_API_KEY*/
+    api_secret: process.env.API_SECRET /*process.env.CLOUDINARY_API_SECRET*/ 
 }); 
 
 //root route
@@ -292,8 +294,8 @@ router.post("/forgot", (req, res, next)=>{
 			const smtpTransport = nodemailer.createTransport({ //nodemailer is the npm package that allows us to send mails
 				service: "Gmail", //using gmail to send mail. 
 				auth:{
-					user: "markphysiopaedic@gmail.com", 
-					pass: "physiopaedicg"/*process.env.GMAILPW*/ //dotemv npm package. or from termink: export GMAILPW = password 
+					user: process.env.GMAIL, 
+                    pass: process.env.GM_PW
 				} 
 			});
 			const mailOptions = { //what the user will see when the email is sent from. 
@@ -362,13 +364,13 @@ router.post("/reset/:token", (req, res)=>{
 			const smtpTransport = nodemailer.createTransport({
 				service: "Gmail", 
 				auth: {
-					user: "markphysiopaedic@gmail.com", 
-					pass: "physiopaedicg"/*process.env.GMAILPW*/ //dotemv npm package. or from termink: export GMAILPW = password
+					user: process.env.GMAIL, 
+                    pass: process.env.GM_PW/*process.env.GMAILPW*/ //dotemv npm package. or from termink: export GMAILPW = password
 				}
 			});
 			const mailOptions = {
 				to: user.email, 
-				from: "markphysiopaedic@gmail.com", 
+				from: process.env.GMAIL, 
 				subject: "Your email has been changed", 
 				text:'Hello,\n\n' +
 				'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
