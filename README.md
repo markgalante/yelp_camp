@@ -61,4 +61,5 @@ GM_PW= <String>
 * Database: [MongoDB](https://www.mongodb.com/)
 * Application data modelling with [Mongoose.js](https://mongoosejs.com/)
 
+## License
 #### [MIT](./LICENSE)
