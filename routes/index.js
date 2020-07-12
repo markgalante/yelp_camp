@@ -123,7 +123,7 @@ router.get("/users/:id", (req, res)=>{
 						console.log(err); 
 						res.redirect("back"); 
 					}
-					console.log(reviews); 
+					console.log(foundUser); 
 					res.render("users/show", {user:foundUser, campgrounds: campgrounds, reviews:reviews});
 				})
 			});
@@ -132,7 +132,7 @@ router.get("/users/:id", (req, res)=>{
 });
 
 	//EDIT ROUTE
-router.get("/users/:id/edit", middleware.isLoggedIn, (req, res)=>{
+router.get("/users/:id/edit", middleware.checkUserAccountOwnership, (req, res)=>{
 	User.findById(req.params.id, (err, foundUser)=>{
 		if(err){
 			req.flash("error", "Error getting user"); 
@@ -145,7 +145,7 @@ router.get("/users/:id/edit", middleware.isLoggedIn, (req, res)=>{
 });
 
 	//UPDATE ROUTE: 
-router.put("/users/:id", middleware.isLoggedIn, upload.single("image"), (req, res)=>{
+router.put("/users/:id", middleware.checkUserAccountOwnership, upload.single("image"), (req, res)=>{
 	User.findById(req.params.id, async (err, updateUser)=>{
 		if(err){
 			console.log(err); 
@@ -182,7 +182,7 @@ router.put("/users/:id", middleware.isLoggedIn, upload.single("image"), (req, re
 });
 
 	//DELETE PAGE: 
-router.get("/users/:id/delete", middleware.isLoggedIn, (req, res) => {
+router.get("/users/:id/delete", middleware.checkUserAccountOwnership, (req, res) => {
 	User.findById(req.params.id, (err, user)=>{
 		if(err){
 			console.log(err.message);
@@ -220,12 +220,7 @@ router.delete("/users/:id", middleware.isLoggedIn, (req, res)=>{
 		});
 
 		//delete comments
-		// Comment.deleteMany({"author.id": user.id}, (err)=>{
-		// 	if(err){
-		// 		console.log(err); 
-		// 	} 
-		// });
-
+		// Comment.deleteMany({"author.id": user.id}, (err)=>{ if(err){ console.log(err); } });
 
 		//Find reviews, use user ID to update campground. 
 		Review.find({"author.id": user.id}, (err, foundReviews)=>{
