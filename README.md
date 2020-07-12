@@ -57,7 +57,7 @@ GM_PW= <String>
 * Alerts with [Connect-Flash](https://www.npmjs.com/package/connect-flash)
 * Allowing for put and delete requests on HTML forms with [method-override](https://github.com/expressjs/method-override#method-override)
 
-#### Database
+### Database
 * Database: [MongoDB](https://www.mongodb.com/)
 * Application data modelling with [Mongoose.js](https://mongoosejs.com/)
 
