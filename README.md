@@ -2,6 +2,11 @@
 
 This is a website created during [Colt Steele's The Web Development Bootcamp on Udemy](https://www.udemy.com/course/the-web-developer-bootcamp/). It gives users an opportunity to rate campsites. 
 
+[View website](https://safe-journey-66364.herokuapp.com/).
+
+## Table Of Contents
+- [Getting started](#Getting Started)
+
 ## Getting Started: 
 > This application contains API keys and passwords that has not been included on this repository. In order to run this application, you'll need to create a .env file with your neccessary details. 
 
