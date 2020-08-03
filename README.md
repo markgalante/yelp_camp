@@ -5,7 +5,9 @@ This is a website created during [Colt Steele's The Web Development Bootcamp on 
 [View website](https://safe-journey-66364.herokuapp.com/).
 
 ## Table Of Contents
-- [Getting started](#Getting Started)
+- [Getting Started](#getting-started)
+- [Set Up](#set-up-of-project)
+- [License](#license)
 
 ## Getting Started: 
 > This application contains API keys and passwords that has not been included on this repository. In order to run this application, you'll need to create a .env file with your neccessary details. 
